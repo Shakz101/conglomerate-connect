@@ -1,10 +1,11 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Building2, Globe, Rocket, Target } from "lucide-react";
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState("vision");
+  const [activeFocusArea, setActiveFocusArea] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -23,6 +24,23 @@ const Index = () => {
     document.querySelectorAll("section[id]").forEach((section) => {
       observer.observe(section);
     });
+
+    // Scroll progress observer
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      const handleScroll = () => {
+        const scrollLeft = scrollContainer.scrollLeft;
+        const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+        const currentIndex = Math.round((scrollLeft / maxScroll) * 5);
+        setActiveFocusArea(currentIndex);
+      };
+
+      scrollContainer.addEventListener('scroll', handleScroll);
+      return () => {
+        scrollContainer.removeEventListener('scroll', handleScroll);
+        observer.disconnect();
+      };
+    }
 
     return () => observer.disconnect();
   }, []);
@@ -93,11 +111,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Strategic Opportunities */}
-      <section className="py-20 px-6" id="opportunities">
-        <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-gradient mb-12 text-center hover-scale">Strategic Focus Areas</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Strategic Opportunities - Updated Section */}
+      <section className="py-20 px-6 relative overflow-hidden" id="opportunities">
+        <div className="absolute inset-0 parallax-bg bg-gradient-to-r from-secondary/50 to-secondary-dark/50" />
+        <div className="container mx-auto relative">
+          <h2 className="text-4xl font-bold text-gradient mb-12 text-center hover-scale">
+            Strategic Focus Areas
+          </h2>
+          
+          <div 
+            ref={scrollContainerRef}
+            className="scroll-container pb-8 -mx-4 px-4"
+          >
             {[
               {
                 sector: "AI & Machine Learning",
@@ -127,18 +152,31 @@ const Index = () => {
               (sector, index) => (
                 <div
                   key={sector.sector}
-                  className={`glass hover-glow p-8 rounded-lg transition-all duration-700 ease-out transform ${
+                  className={`scroll-item mx-4 glass hover-glow p-8 rounded-lg transition-all duration-700 ease-out transform ${
                     isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                   }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+                  style={{ 
+                    transitionDelay: `${index * 100}ms`,
+                  }}
                 >
-                  <h3 className="text-xl font-semibold text-gradient mb-4 hover-scale">{sector.sector}</h3>
+                  <h3 className="text-xl font-semibold text-gradient mb-4 hover-scale">
+                    {sector.sector}
+                  </h3>
                   <p className="text-primary-light">
                     {sector.description}
                   </p>
                 </div>
               )
             )}
+          </div>
+
+          <div className="progress-dots">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className={`progress-dot ${index === activeFocusArea ? 'active' : ''}`}
+              />
+            ))}
           </div>
         </div>
       </section>
