@@ -82,6 +82,9 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    width: 100vw;
+    height: 100vh;
   }
 
   .scroll-container::-webkit-scrollbar {
@@ -89,22 +92,23 @@
   }
 
   .scroll-item {
-    @apply flex-none snap-center;
-    width: calc(100% - 2rem);
-    max-width: 400px;
-    scroll-snap-align: center;
+    @apply flex-none snap-start flex items-center justify-center relative;
+    width: 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
   }
 
-  .parallax-bg {
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    transform: translateZ(-1px) scale(2);
+  .scroll-content {
+    @apply max-w-3xl mx-auto px-6 relative z-10;
+  }
+
+  .section-bg {
+    @apply absolute inset-0;
+    background: linear-gradient(to right, rgba(223,234,247,0.8), rgba(244,248,252,0.8));
   }
 
   .progress-dots {
-    @apply flex justify-center space-x-2 mt-6;
+    @apply fixed bottom-8 left-1/2 -translate-x-1/2 flex justify-center space-x-2 z-20;
   }
 
   .progress-dot {

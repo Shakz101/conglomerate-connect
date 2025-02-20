@@ -111,73 +111,68 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Strategic Opportunities - Updated Section */}
-      <section className="py-20 px-6 relative overflow-hidden" id="opportunities">
-        <div className="absolute inset-0 parallax-bg bg-gradient-to-r from-secondary/50 to-secondary-dark/50" />
-        <div className="container mx-auto relative">
-          <h2 className="text-4xl font-bold text-gradient mb-12 text-center hover-scale">
-            Strategic Focus Areas
-          </h2>
-          
-          <div 
-            ref={scrollContainerRef}
-            className="scroll-container pb-8 -mx-4 px-4"
-          >
-            {[
-              {
-                sector: "AI & Machine Learning",
-                description: "Developing cutting-edge AI solutions for enterprise applications."
-              },
-              {
-                sector: "FinTech Innovation",
-                description: "Revolutionizing financial services through technology integration."
-              },
-              {
-                sector: "Clean Technology",
-                description: "Sustainable solutions for a greener, more efficient future."
-              },
-              {
-                sector: "Digital Health",
-                description: "Next-generation healthcare delivery and patient care systems."
-              },
-              {
-                sector: "Smart Infrastructure",
-                description: "Intelligent solutions for cities and communities of tomorrow."
-              },
-              {
-                sector: "Enterprise SaaS",
-                description: "Cloud-native solutions for business transformation."
-              }
-            ].map(
-              (sector, index) => (
+      {/* Strategic Opportunities - Full Viewport Section */}
+      <section className="relative overflow-hidden" id="opportunities">
+        <div 
+          ref={scrollContainerRef}
+          className="scroll-container"
+        >
+          {[
+            {
+              sector: "AI & Machine Learning",
+              description: "Developing cutting-edge AI solutions for enterprise applications."
+            },
+            {
+              sector: "FinTech Innovation",
+              description: "Revolutionizing financial services through technology integration."
+            },
+            {
+              sector: "Clean Technology",
+              description: "Sustainable solutions for a greener, more efficient future."
+            },
+            {
+              sector: "Digital Health",
+              description: "Next-generation healthcare delivery and patient care systems."
+            },
+            {
+              sector: "Smart Infrastructure",
+              description: "Intelligent solutions for cities and communities of tomorrow."
+            },
+            {
+              sector: "Enterprise SaaS",
+              description: "Cloud-native solutions for business transformation."
+            }
+          ].map((sector, index) => (
+            <div key={sector.sector} className="scroll-item">
+              <div className="section-bg" />
+              <div className="scroll-content">
                 <div
-                  key={sector.sector}
-                  className={`scroll-item mx-4 glass hover-glow p-8 rounded-lg transition-all duration-700 ease-out transform ${
+                  className={`glass hover-glow p-12 rounded-xl transition-all duration-700 ease-out transform ${
                     isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                   }`}
                   style={{ 
                     transitionDelay: `${index * 100}ms`,
                   }}
                 >
-                  <h3 className="text-xl font-semibold text-gradient mb-4 hover-scale">
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
                     {sector.sector}
-                  </h3>
-                  <p className="text-primary-light">
+                  </h2>
+                  <p className="text-xl md:text-2xl text-primary-light leading-relaxed">
                     {sector.description}
                   </p>
                 </div>
-              )
-            )}
-          </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-          <div className="progress-dots">
-            {[...Array(6)].map((_, index) => (
-              <div
-                key={index}
-                className={`progress-dot ${index === activeFocusArea ? 'active' : ''}`}
-              />
-            ))}
-          </div>
+        <div className="progress-dots">
+          {[...Array(6)].map((_, index) => (
+            <div
+              key={index}
+              className={`progress-dot ${index === activeFocusArea ? 'active' : ''}`}
+            />
+          ))}
         </div>
       </section>
 
