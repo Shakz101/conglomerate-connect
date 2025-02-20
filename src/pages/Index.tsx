@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Building2, Globe, Network, Users } from "lucide-react";
+import { Building2, Globe, Rocket, Target } from "lucide-react";
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,9 +15,9 @@ const Index = () => {
       <nav className="fixed top-0 w-full z-50 glass">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-primary font-semibold text-xl">Conglomerate</div>
+            <div className="text-primary font-semibold text-xl">Devircle</div>
             <div className="hidden md:flex space-x-8">
-              {["About", "Portfolio", "Subsidiaries", "Contact"].map((item) => (
+              {["Vision", "Strategy", "Opportunities", "Contact"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
@@ -32,30 +32,30 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-32 pb-20 px-6" id="vision">
         <div className="container mx-auto">
           <div className={`space-y-6 transition-all duration-700 ease-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
             <h1 className="text-5xl md:text-7xl font-bold text-primary text-balance leading-tight">
-              Shaping Tomorrow's
+              Building Tomorrow's
               <br />
-              Global Enterprise
+              Innovation Empire
             </h1>
             <p className="text-xl text-primary-light max-w-2xl">
-              A diversified portfolio of industry-leading companies working together to drive innovation and sustainable growth.
+              Devircle is an ambitious conglomerate positioned to revolutionize multiple industries through strategic acquisitions, partnerships, and innovative ventures.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-secondary">
+      {/* Vision & Strategy Section */}
+      <section className="py-20 bg-secondary" id="strategy">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Building2, label: "Companies", value: "50+" },
-              { icon: Globe, label: "Countries", value: "30+" },
-              { icon: Users, label: "Employees", value: "100k+" },
-              { icon: Network, label: "Partners", value: "200+" },
+              { icon: Rocket, label: "Innovation Focus", value: "Future-Ready" },
+              { icon: Globe, label: "Market Reach", value: "Global Scale" },
+              { icon: Target, label: "Strategic Vision", value: "2025 Launch" },
+              { icon: Building2, label: "Target Ventures", value: "10+" },
             ].map((stat, index) => (
               <div
                 key={stat.label}
@@ -73,23 +73,48 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Portfolio Preview */}
-      <section className="py-20 px-6">
+      {/* Strategic Opportunities */}
+      <section className="py-20 px-6" id="opportunities">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-primary mb-12 text-center">Our Portfolio</h2>
+          <h2 className="text-4xl font-bold text-primary mb-12 text-center">Strategic Focus Areas</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {["Technology", "Healthcare", "Energy", "Finance", "Real Estate", "Manufacturing"].map(
+            {[
+              {
+                sector: "AI & Machine Learning",
+                description: "Developing cutting-edge AI solutions for enterprise applications."
+              },
+              {
+                sector: "FinTech Innovation",
+                description: "Revolutionizing financial services through technology integration."
+              },
+              {
+                sector: "Clean Technology",
+                description: "Sustainable solutions for a greener, more efficient future."
+              },
+              {
+                sector: "Digital Health",
+                description: "Next-generation healthcare delivery and patient care systems."
+              },
+              {
+                sector: "Smart Infrastructure",
+                description: "Intelligent solutions for cities and communities of tomorrow."
+              },
+              {
+                sector: "Enterprise SaaS",
+                description: "Cloud-native solutions for business transformation."
+              }
+            ].map(
               (sector, index) => (
                 <div
-                  key={sector}
+                  key={sector.sector}
                   className={`glass p-8 rounded-lg transition-all duration-700 ease-out transform hover:translate-y-[-4px] ${
                     isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <h3 className="text-xl font-semibold text-primary mb-4">{sector}</h3>
+                  <h3 className="text-xl font-semibold text-primary mb-4">{sector.sector}</h3>
                   <p className="text-primary-light">
-                    Leading the industry with innovative solutions and sustainable practices.
+                    {sector.description}
                   </p>
                 </div>
               )
@@ -99,9 +124,12 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 px-6 bg-secondary">
+      <section className="py-20 px-6 bg-secondary" id="contact">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-4xl font-bold text-primary mb-12 text-center">Get in Touch</h2>
+          <h2 className="text-4xl font-bold text-primary mb-6 text-center">Partner With Us</h2>
+          <p className="text-center text-primary-light mb-12 max-w-2xl mx-auto">
+            Whether you're an innovator, investor, or potential partner, we're interested in connecting with forward-thinking individuals and organizations.
+          </p>
           <div className="glass p-8 rounded-lg">
             <form className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -116,13 +144,20 @@ const Index = () => {
                   className="w-full p-3 rounded-lg bg-white/50 border border-white/30 focus:outline-none focus:border-primary/30"
                 />
               </div>
+              <select className="w-full p-3 rounded-lg bg-white/50 border border-white/30 focus:outline-none focus:border-primary/30">
+                <option value="">Select Interest Area</option>
+                <option value="investment">Investment Opportunities</option>
+                <option value="partnership">Strategic Partnership</option>
+                <option value="innovation">Innovation Collaboration</option>
+                <option value="careers">Career Opportunities</option>
+              </select>
               <textarea
-                placeholder="Message"
+                placeholder="Tell us about your vision and how we can collaborate"
                 rows={4}
                 className="w-full p-3 rounded-lg bg-white/50 border border-white/30 focus:outline-none focus:border-primary/30"
               />
               <button className="w-full md:w-auto px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors">
-                Send Message
+                Start the Conversation
               </button>
             </form>
           </div>
