@@ -13,12 +13,11 @@ const Index = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          const sectionIndex = parseInt(entry.target.getAttribute('data-index') || '0');
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
-            const sectionIndex = parseInt(entry.target.getAttribute('data-index') || '0');
             setVisibleSections(prev => new Set([...prev, sectionIndex]));
           } else {
-            const sectionIndex = parseInt(entry.target.getAttribute('data-index') || '0');
             setVisibleSections(prev => {
               const newSet = new Set(prev);
               newSet.delete(sectionIndex);
@@ -27,7 +26,10 @@ const Index = () => {
           }
         });
       },
-      { threshold: 0.5 }
+      { 
+        threshold: 0.5,
+        rootMargin: "0px"
+      }
     );
 
     document.querySelectorAll("section[id]").forEach((section) => {
@@ -104,10 +106,11 @@ const Index = () => {
       </section>
 
       {/* Strategic Opportunities Section */}
-      <section className="relative h-screen" id="opportunities">
+      <section className="relative min-h-screen overflow-hidden" id="opportunities">
         <div 
           ref={scrollContainerRef}
-          className="scroll-container"
+          className="h-screen overflow-y-auto overflow-x-hidden"
+          style={{ scrollSnapType: 'y mandatory' }}
         >
           {[
             {
@@ -136,13 +139,16 @@ const Index = () => {
             }
           ].map((sector, index) => (
             <div 
-              key={sector.sector} 
-              className="scroll-item"
+              key={sector.sector}
+              className="h-screen w-full flex items-center justify-center relative"
+              style={{ scrollSnapAlign: 'start' }}
               data-index={index}
             >
-              <div className={`animate-bg animate-bg-${index + 1}`} />
-              <div className={`scroll-content ${visibleSections.has(index) ? 'visible' : ''}`}>
-                <div className="glass hover-glow p-12 rounded-xl backdrop-blur-xl">
+              <div className={`animate-bg animate-bg-${index + 1} absolute inset-0`} />
+              <div className={`max-w-4xl mx-auto px-6 transition-all duration-700 transform ${
+                visibleSections.has(index) ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+              }`}>
+                <div className="glass p-12 rounded-xl backdrop-blur-xl">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
                     {sector.sector}
                   </h2>
