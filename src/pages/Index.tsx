@@ -4,7 +4,7 @@ import { Building2, Globe, Rocket, Target } from "lucide-react";
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState("vision");
-  const [activeFocusArea, setActiveFocusArea] = useState(0);
+  const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,6 +15,15 @@ const Index = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
+            const sectionIndex = parseInt(entry.target.getAttribute('data-index') || '0');
+            setVisibleSections(prev => new Set([...prev, sectionIndex]));
+          } else {
+            const sectionIndex = parseInt(entry.target.getAttribute('data-index') || '0');
+            setVisibleSections(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(sectionIndex);
+              return newSet;
+            });
           }
         });
       },
@@ -24,23 +33,6 @@ const Index = () => {
     document.querySelectorAll("section[id]").forEach((section) => {
       observer.observe(section);
     });
-
-    // Scroll progress observer
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      const handleScroll = () => {
-        const scrollLeft = scrollContainer.scrollLeft;
-        const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-        const currentIndex = Math.round((scrollLeft / maxScroll) * 5);
-        setActiveFocusArea(currentIndex);
-      };
-
-      scrollContainer.addEventListener('scroll', handleScroll);
-      return () => {
-        scrollContainer.removeEventListener('scroll', handleScroll);
-        observer.disconnect();
-      };
-    }
 
     return () => observer.disconnect();
   }, []);
@@ -112,7 +104,7 @@ const Index = () => {
       </section>
 
       {/* Strategic Opportunities Section */}
-      <section className="relative" id="opportunities">
+      <section className="relative h-screen" id="opportunities">
         <div 
           ref={scrollContainerRef}
           className="scroll-container"
@@ -143,17 +135,14 @@ const Index = () => {
               description: "Cloud-native solutions for business transformation."
             }
           ].map((sector, index) => (
-            <div key={sector.sector} className="scroll-item">
-              <div className="section-bg" />
-              <div className="scroll-content">
-                <div
-                  className={`glass hover-glow p-12 rounded-xl transition-all duration-700 ease-out transform ${
-                    isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                  }`}
-                  style={{ 
-                    transitionDelay: `${index * 100}ms`,
-                  }}
-                >
+            <div 
+              key={sector.sector} 
+              className="scroll-item"
+              data-index={index}
+            >
+              <div className={`animate-bg animate-bg-${index + 1}`} />
+              <div className={`scroll-content ${visibleSections.has(index) ? 'visible' : ''}`}>
+                <div className="glass hover-glow p-12 rounded-xl backdrop-blur-xl">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
                     {sector.sector}
                   </h2>
