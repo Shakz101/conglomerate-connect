@@ -27,8 +27,8 @@ const Index = () => {
         });
       },
       { 
-        threshold: 0.5,
-        rootMargin: "0px"
+        threshold: 0.2,
+        rootMargin: "-10% 0px"
       }
     );
 
@@ -106,11 +106,10 @@ const Index = () => {
       </section>
 
       {/* Strategic Opportunities Section */}
-      <section className="relative min-h-screen overflow-hidden" id="opportunities">
+      <section className="relative min-h-screen" id="opportunities">
         <div 
           ref={scrollContainerRef}
-          className="h-screen overflow-y-auto overflow-x-hidden"
-          style={{ scrollSnapType: 'y mandatory' }}
+          className="h-screen overflow-y-auto"
         >
           {[
             {
@@ -140,12 +139,11 @@ const Index = () => {
           ].map((sector, index) => (
             <div 
               key={sector.sector}
-              className="h-screen w-full flex items-center justify-center relative"
-              style={{ scrollSnapAlign: 'start' }}
+              className="h-screen w-full flex items-center justify-center relative snap-start"
               data-index={index}
             >
               <div className={`animate-bg animate-bg-${index + 1} absolute inset-0`} />
-              <div className={`max-w-4xl mx-auto px-6 transition-all duration-700 transform ${
+              <div className={`max-w-4xl mx-auto px-6 transition-all duration-1000 transform ${
                 visibleSections.has(index) ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
               }`}>
                 <div className="glass p-12 rounded-xl backdrop-blur-xl">
