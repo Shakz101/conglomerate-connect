@@ -78,28 +78,16 @@
   }
 
   .scroll-container {
-    @apply flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    @apply flex flex-col w-full;
     scroll-behavior: smooth;
-    width: 100vw;
-    height: 100vh;
-  }
-
-  .scroll-container::-webkit-scrollbar {
-    display: none;
   }
 
   .scroll-item {
-    @apply flex-none snap-start flex items-center justify-center relative;
-    width: 100vw;
-    height: 100vh;
-    scroll-snap-align: start;
+    @apply w-full min-h-screen flex items-center justify-center relative py-20;
   }
 
   .scroll-content {
-    @apply max-w-3xl mx-auto px-6 relative z-10;
+    @apply max-w-5xl mx-auto px-6 relative z-10;
   }
 
   .section-bg {

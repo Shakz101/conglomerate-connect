@@ -111,8 +111,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Strategic Opportunities - Full Viewport Section */}
-      <section className="relative overflow-hidden" id="opportunities">
+      {/* Strategic Opportunities Section */}
+      <section className="relative" id="opportunities">
         <div 
           ref={scrollContainerRef}
           className="scroll-container"
@@ -163,15 +163,6 @@ const Index = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="progress-dots">
-          {[...Array(6)].map((_, index) => (
-            <div
-              key={index}
-              className={`progress-dot ${index === activeFocusArea ? 'active' : ''}`}
-            />
           ))}
         </div>
       </section>
