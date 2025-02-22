@@ -27,8 +27,8 @@ const Index = () => {
         });
       },
       { 
-        threshold: 0.2,
-        rootMargin: "-10% 0px"
+        threshold: [0.3],
+        rootMargin: "-20% 0px"
       }
     );
 
@@ -106,10 +106,14 @@ const Index = () => {
       </section>
 
       {/* Strategic Opportunities Section */}
-      <section className="relative min-h-screen" id="opportunities">
+      <section className="relative h-screen" id="opportunities">
         <div 
           ref={scrollContainerRef}
-          className="h-screen overflow-y-auto"
+          className="absolute inset-0 overflow-y-auto snap-y snap-mandatory"
+          style={{ 
+            height: '100vh',
+            scrollBehavior: 'smooth'
+          }}
         >
           {[
             {
