@@ -52,9 +52,15 @@ const Index = () => {
       }
     );
 
-    document.querySelectorAll(".opportunity-card").forEach((card) => {
-      cardObserver.observe(card);
-    });
+    // Wait for DOM to be ready before observing cards
+    setTimeout(() => {
+      const cards = document.querySelectorAll(".opportunity-card");
+      if (cards.length > 0) {
+        cards.forEach((card) => {
+          cardObserver.observe(card);
+        });
+      }
+    }, 100);
 
     return () => {
       sectionObserver.disconnect();
@@ -169,7 +175,7 @@ const Index = () => {
           ].map((sector, index) => (
             <div 
               key={sector.sector}
-              className={`max-w-4xl mx-auto opportunity-card`}
+              className="max-w-4xl mx-auto opportunity-card"
               data-index={index}
               id={`opportunity-${index}`}
             >
