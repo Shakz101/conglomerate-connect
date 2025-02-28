@@ -175,7 +175,7 @@ const Index = () => {
           ].map((sector, index) => (
             <div 
               key={sector.sector}
-              className="max-w-4xl mx-auto opportunity-card"
+              className="opportunity-card w-full"
               data-index={index}
               id={`opportunity-${index}`}
             >
