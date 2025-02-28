@@ -149,10 +149,9 @@ const Index = () => {
               key={sector.sector}
               className="max-w-4xl mx-auto"
               data-index={index}
+              id={`opportunity-${index}`} // Added unique ID for each opportunity card
             >
-              <div className={`relative transition-all duration-700 transform ${
-                visibleSections.has(index) ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-              }`}>
+              <div className="relative transition-all duration-700 transform opacity-100"> {/* Removed conditional opacity */}
                 <div className={`animate-bg animate-bg-${index + 1} absolute inset-0 rounded-xl -z-10`} />
                 <div className="glass p-12 rounded-xl backdrop-blur-xl">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
