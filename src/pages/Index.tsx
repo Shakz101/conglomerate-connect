@@ -5,25 +5,18 @@ import { Building2, Globe, Rocket, Target, ChevronDown } from "lucide-react";
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState("vision");
-  const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
+  const [visibleCards, setVisibleCards] = useState<number[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
 
-    const observer = new IntersectionObserver(
+    // Observer for sections (navigation highlight)
+    const sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const sectionIndex = parseInt(entry.target.getAttribute('data-index') || '0');
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
-            setVisibleSections(prev => new Set([...prev, sectionIndex]));
-          } else {
-            setVisibleSections(prev => {
-              const newSet = new Set(prev);
-              newSet.delete(sectionIndex);
-              return newSet;
-            });
           }
         });
       },
@@ -34,14 +27,43 @@ const Index = () => {
     );
 
     document.querySelectorAll("section[id]").forEach((section) => {
-      observer.observe(section);
+      sectionObserver.observe(section);
     });
 
-    return () => observer.disconnect();
+    // Observer for opportunity cards
+    const cardObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const cardIndex = parseInt(entry.target.getAttribute('data-index') || '0');
+          
+          if (entry.isIntersecting) {
+            setVisibleCards(prev => {
+              if (!prev.includes(cardIndex)) {
+                return [...prev, cardIndex];
+              }
+              return prev;
+            });
+          }
+        });
+      },
+      {
+        threshold: 0.15,
+        rootMargin: "-50px 0px"
+      }
+    );
+
+    document.querySelectorAll(".opportunity-card").forEach((card) => {
+      cardObserver.observe(card);
+    });
+
+    return () => {
+      sectionObserver.disconnect();
+      cardObserver.disconnect();
+    };
   }, []);
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
+    <div className="min-h-screen w-full overflow-x-hidden" ref={scrollContainerRef}>
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 glass">
         <div className="container mx-auto px-6 py-4">
@@ -147,11 +169,11 @@ const Index = () => {
           ].map((sector, index) => (
             <div 
               key={sector.sector}
-              className="max-w-4xl mx-auto"
+              className={`max-w-4xl mx-auto opportunity-card`}
               data-index={index}
-              id={`opportunity-${index}`} // Added unique ID for each opportunity card
+              id={`opportunity-${index}`}
             >
-              <div className="relative transition-all duration-700 transform opacity-100"> {/* Removed conditional opacity */}
+              <div className={`relative transition-all duration-1000 transform ${visibleCards.includes(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
                 <div className={`animate-bg animate-bg-${index + 1} absolute inset-0 rounded-xl -z-10`} />
                 <div className="glass p-12 rounded-xl backdrop-blur-xl">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
