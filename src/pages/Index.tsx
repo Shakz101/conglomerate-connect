@@ -1,5 +1,6 @@
+
 import { useState, useEffect, useRef } from "react";
-import { Building2, Globe, Rocket, Target } from "lucide-react";
+import { Building2, Globe, Rocket, Target, ChevronDown } from "lucide-react";
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,8 +28,8 @@ const Index = () => {
         });
       },
       { 
-        threshold: [0.3],
-        rootMargin: "-20% 0px"
+        threshold: 0.1,
+        rootMargin: "0px"
       }
     );
 
@@ -106,15 +107,18 @@ const Index = () => {
       </section>
 
       {/* Strategic Opportunities Section */}
-      <section className="relative h-screen" id="opportunities">
-        <div 
-          ref={scrollContainerRef}
-          className="absolute inset-0 overflow-y-auto snap-y snap-mandatory"
-          style={{ 
-            height: '100vh',
-            scrollBehavior: 'smooth'
-          }}
-        >
+      <section className="py-20" id="opportunities">
+        <div className="container mx-auto px-6 mb-10">
+          <h2 className="text-4xl font-bold text-gradient mb-6 text-center">Strategic Focus Areas</h2>
+          <p className="text-center text-primary-light mb-10 max-w-2xl mx-auto">
+            Explore our targeted investment and development sectors
+          </p>
+          <div className="flex justify-center mb-4">
+            <ChevronDown className="w-6 h-6 animate-bounce text-primary" />
+          </div>
+        </div>
+        
+        <div className="space-y-16 pb-20">
           {[
             {
               sector: "AI & Machine Learning",
@@ -143,13 +147,13 @@ const Index = () => {
           ].map((sector, index) => (
             <div 
               key={sector.sector}
-              className="h-screen w-full flex items-center justify-center relative snap-start"
+              className="max-w-4xl mx-auto"
               data-index={index}
             >
-              <div className={`animate-bg animate-bg-${index + 1} absolute inset-0`} />
-              <div className={`max-w-4xl mx-auto px-6 transition-all duration-1000 transform ${
+              <div className={`relative transition-all duration-700 transform ${
                 visibleSections.has(index) ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
               }`}>
+                <div className={`animate-bg animate-bg-${index + 1} absolute inset-0 rounded-xl -z-10`} />
                 <div className="glass p-12 rounded-xl backdrop-blur-xl">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
                     {sector.sector}
