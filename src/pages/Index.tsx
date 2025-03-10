@@ -1,21 +1,31 @@
 import { useState, useEffect, useRef } from "react";
 import { Building2, Globe, Rocket, Target, ChevronDown } from "lucide-react";
 
-// SectorCard component handles its own visibility using IntersectionObserver
+// Mapping sectors to their background images
+const backgroundMapping = {
+  "AI & Machine Learning": "/images/ai-machine-learning.jpg",
+  "FinTech Innovation": "/images/fintech.jpg",
+  "Clean Technology": "/images/clean-technology.jpg",
+  "Digital Health": "/images/digital-health.jpg",
+  "Smart Infrastructure": "/images/smart-infrastructure.jpg",
+  "Enterprise SaaS": "/images/enterprise-saas.jpg",
+};
+
+// SectorCard component now occupies the full viewport with a background image
 const SectorCard = ({ sector, description, index }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const cardRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // We use a threshold of 0.5 so that when half the card is visible, it becomes active.
         entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
+          setIsActive(entry.isIntersecting);
         });
       },
       {
-        threshold: 0.3, // adjust this threshold for when the card should animate in
-        rootMargin: "0px",
+        threshold: 0.5,
       }
     );
 
@@ -27,14 +37,32 @@ const SectorCard = ({ sector, description, index }) => {
   }, []);
 
   return (
-    <div ref={cardRef} className="opportunity-card w-full" data-index={index}>
+    <div
+      ref={cardRef}
+      className="opportunity-card h-screen w-full snap-start relative overflow-hidden"
+    >
+      {/* Background image with an overlay */}
       <div
-        className={`relative transition-all duration-1000 transform ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+        className={`absolute inset-0 transition-opacity duration-1000 ${
+          isActive ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className={`animate-bg animate-bg-${index + 1} absolute inset-0 rounded-xl -z-10`} />
-        <div className="glass p-12 rounded-xl backdrop-blur-xl">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${backgroundMapping[sector] || "/images/default.jpg"})`,
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex items-center justify-center h-full">
+        <div
+          className={`text-center glass p-12 rounded-xl backdrop-blur-xl transition-all duration-1000 transform ${
+            isActive ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+          }`}
+        >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
             {sector}
           </h2>
@@ -55,7 +83,7 @@ const Index = () => {
   useEffect(() => {
     setIsVisible(true);
 
-    // Observer for section highlighting in navigation
+    // Observer for navigation section highlighting
     const sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -110,14 +138,18 @@ const Index = () => {
       <nav className="fixed top-0 w-full z-50 glass">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-primary font-semibold text-xl hover-scale">Devircle</div>
+            <div className="text-primary font-semibold text-xl hover-scale">
+              Devircle
+            </div>
             <div className="hidden md:flex space-x-8">
               {["Vision", "Strategy", "Opportunities", "Contact"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
                   className={`nav-link text-primary hover:text-primary-light transition-all duration-300 relative ${
-                    activeSection === item.toLowerCase() ? "after:scale-x-100" : "after:scale-x-0"
+                    activeSection === item.toLowerCase()
+                      ? "after:scale-x-100"
+                      : "after:scale-x-0"
                   }`}
                 >
                   {item}
@@ -142,7 +174,9 @@ const Index = () => {
               Innovation Empire
             </h1>
             <p className="text-xl text-primary-light max-w-2xl slide-up">
-              Devircle is an ambitious conglomerate positioned to revolutionize multiple industries through strategic acquisitions, partnerships, and innovative ventures.
+              Devircle is an ambitious conglomerate positioned to revolutionize
+              multiple industries through strategic acquisitions, partnerships,
+              and innovative ventures.
             </p>
           </div>
         </div>
@@ -166,7 +200,9 @@ const Index = () => {
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <stat.icon className="w-8 h-8 mx-auto mb-4 text-primary hover-scale" />
-                <div className="text-3xl font-bold text-gradient mb-2">{stat.value}</div>
+                <div className="text-3xl font-bold text-gradient mb-2">
+                  {stat.value}
+                </div>
                 <div className="text-primary-light">{stat.label}</div>
               </div>
             ))}
@@ -174,10 +210,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Strategic Opportunities Section */}
-      <section className="py-20" id="opportunities">
+      {/* Strategic Opportunities Section with Scroll-Snap */}
+      <section className="relative" id="opportunities">
         <div className="container mx-auto px-6 mb-10">
-          <h2 className="text-4xl font-bold text-gradient mb-6 text-center">Strategic Focus Areas</h2>
+          <h2 className="text-4xl font-bold text-gradient mb-6 text-center">
+            Strategic Focus Areas
+          </h2>
           <p className="text-center text-primary-light mb-10 max-w-2xl mx-auto">
             Explore our targeted investment and development sectors
           </p>
@@ -185,8 +223,8 @@ const Index = () => {
             <ChevronDown className="w-6 h-6 animate-bounce text-primary" />
           </div>
         </div>
-
-        <div className="space-y-16 pb-20">
+        {/* The scroll container for sector cards */}
+        <div className="snap-y snap-mandatory">
           {sectors.map((sector, index) => (
             <SectorCard
               key={sector.sector}
@@ -201,9 +239,13 @@ const Index = () => {
       {/* Contact Section */}
       <section className="py-20 px-6 bg-secondary/50 backdrop-blur-sm" id="contact">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-4xl font-bold text-gradient mb-6 text-center hover-scale">Partner With Us</h2>
+          <h2 className="text-4xl font-bold text-gradient mb-6 text-center hover-scale">
+            Partner With Us
+          </h2>
           <p className="text-center text-primary-light mb-12 max-w-2xl mx-auto">
-            Whether you're an innovator, investor, or potential partner, we're interested in connecting with forward-thinking individuals and organizations.
+            Whether you're an innovator, investor, or potential partner, we're
+            interested in connecting with forward-thinking individuals and
+            organizations.
           </p>
           <div className="glass hover-glow p-8 rounded-lg">
             <form className="space-y-6">
