@@ -1,17 +1,61 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Building2, Globe, Rocket, Target, ChevronDown } from "lucide-react";
+
+// SectorCard component handles its own visibility using IntersectionObserver
+const SectorCard = ({ sector, description, index }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.3, // adjust this threshold for when the card should animate in
+        rootMargin: "0px",
+      }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={cardRef} className="opportunity-card w-full" data-index={index}>
+      <div
+        className={`relative transition-all duration-1000 transform ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+        }`}
+      >
+        <div className={`animate-bg animate-bg-${index + 1} absolute inset-0 rounded-xl -z-10`} />
+        <div className="glass p-12 rounded-xl backdrop-blur-xl">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
+            {sector}
+          </h2>
+          <p className="text-xl md:text-2xl text-primary-light leading-relaxed">
+            {description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState("vision");
-  const [visibleCards, setVisibleCards] = useState<number[]>([]);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
 
-    // Observer for sections (navigation highlight)
+    // Observer for section highlighting in navigation
     const sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -20,9 +64,9 @@ const Index = () => {
           }
         });
       },
-      { 
+      {
         threshold: 0.1,
-        rootMargin: "0px"
+        rootMargin: "0px",
       }
     );
 
@@ -30,43 +74,35 @@ const Index = () => {
       sectionObserver.observe(section);
     });
 
-    // Observer for opportunity cards
-    const cardObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const cardIndex = parseInt(entry.target.getAttribute('data-index') || '0');
-          
-          if (entry.isIntersecting) {
-            setVisibleCards(prev => {
-              if (!prev.includes(cardIndex)) {
-                return [...prev, cardIndex];
-              }
-              return prev;
-            });
-          }
-        });
-      },
-      {
-        threshold: 0.15,
-        rootMargin: "-50px 0px"
-      }
-    );
-
-    // Wait for DOM to be ready before observing cards
-    setTimeout(() => {
-      const cards = document.querySelectorAll(".opportunity-card");
-      if (cards.length > 0) {
-        cards.forEach((card) => {
-          cardObserver.observe(card);
-        });
-      }
-    }, 100);
-
-    return () => {
-      sectionObserver.disconnect();
-      cardObserver.disconnect();
-    };
+    return () => sectionObserver.disconnect();
   }, []);
+
+  const sectors = [
+    {
+      sector: "AI & Machine Learning",
+      description: "Developing cutting-edge AI solutions for enterprise applications.",
+    },
+    {
+      sector: "FinTech Innovation",
+      description: "Revolutionizing financial services through technology integration.",
+    },
+    {
+      sector: "Clean Technology",
+      description: "Sustainable solutions for a greener, more efficient future.",
+    },
+    {
+      sector: "Digital Health",
+      description: "Next-generation healthcare delivery and patient care systems.",
+    },
+    {
+      sector: "Smart Infrastructure",
+      description: "Intelligent solutions for cities and communities of tomorrow.",
+    },
+    {
+      sector: "Enterprise SaaS",
+      description: "Cloud-native solutions for business transformation.",
+    },
+  ];
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden" ref={scrollContainerRef}>
@@ -95,7 +131,11 @@ const Index = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6" id="vision">
         <div className="container mx-auto">
-          <div className={`space-y-6 transition-all duration-700 ease-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+          <div
+            className={`space-y-6 transition-all duration-700 ease-out transform ${
+              isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+            }`}
+          >
             <h1 className="text-5xl md:text-7xl font-bold text-gradient text-balance leading-tight hover-scale">
               Building Tomorrow's
               <br />
@@ -121,7 +161,7 @@ const Index = () => {
               <div
                 key={stat.label}
                 className={`glass hover-glow p-6 rounded-lg text-center transition-all duration-700 ease-out transform ${
-                  isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                  isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
@@ -145,52 +185,15 @@ const Index = () => {
             <ChevronDown className="w-6 h-6 animate-bounce text-primary" />
           </div>
         </div>
-        
+
         <div className="space-y-16 pb-20">
-          {[
-            {
-              sector: "AI & Machine Learning",
-              description: "Developing cutting-edge AI solutions for enterprise applications."
-            },
-            {
-              sector: "FinTech Innovation",
-              description: "Revolutionizing financial services through technology integration."
-            },
-            {
-              sector: "Clean Technology",
-              description: "Sustainable solutions for a greener, more efficient future."
-            },
-            {
-              sector: "Digital Health",
-              description: "Next-generation healthcare delivery and patient care systems."
-            },
-            {
-              sector: "Smart Infrastructure",
-              description: "Intelligent solutions for cities and communities of tomorrow."
-            },
-            {
-              sector: "Enterprise SaaS",
-              description: "Cloud-native solutions for business transformation."
-            }
-          ].map((sector, index) => (
-            <div 
+          {sectors.map((sector, index) => (
+            <SectorCard
               key={sector.sector}
-              className="opportunity-card w-full"
-              data-index={index}
-              id={`opportunity-${index}`}
-            >
-              <div className={`relative transition-all duration-1000 transform ${visibleCards.includes(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-                <div className={`animate-bg animate-bg-${index + 1} absolute inset-0 rounded-xl -z-10`} />
-                <div className="glass p-12 rounded-xl backdrop-blur-xl">
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-8 hover-scale">
-                    {sector.sector}
-                  </h2>
-                  <p className="text-xl md:text-2xl text-primary-light leading-relaxed">
-                    {sector.description}
-                  </p>
-                </div>
-              </div>
-            </div>
+              index={index}
+              sector={sector.sector}
+              description={sector.description}
+            />
           ))}
         </div>
       </section>
